@@ -1,6 +1,7 @@
 package org.sopt;
 
 import org.sopt.controller.MemberController;
+import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
 import org.sopt.repository.MemoryMemberRepository;
 import org.sopt.service.MemberServiceImpl;
@@ -34,11 +35,22 @@ public class Main {
                 case "1":
                     System.out.print("등록할 회원 이름을 입력하세요: ");
                     String name = scanner.nextLine();
-                    if (name.trim().isEmpty()) {
-                        System.out.println("⚠️ 이름을 입력해주세요.");
+
+                    System.out.print("등록할 회원 이메일을 입력하세요: ");
+                    String email = scanner.nextLine();
+
+                    System.out.print("등록할 회원의 생년월일(YYYY-MM-DD)을 입력하세요: ");
+                    String birthdate = scanner.nextLine();
+
+                    System.out.print("등록할 회원의 성별(MALE / FEMALE)을 입력하세요: ");
+                    Gender gender = Gender.valueOf(scanner.nextLine().toUpperCase());
+
+                    if (name.trim().isEmpty() || email.trim().isEmpty() || birthdate.trim().isEmpty()) {
+                        System.out.println("⚠️ 모든 정보를 입력해주세요.");
                         continue;
                     }
-                    Long createdId = memberController.createMember(name);
+
+                    Long createdId = memberController.createMember(name, email, birthdate, gender);
                     if (createdId != null) {
                         System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
                     } else {
@@ -49,9 +61,16 @@ public class Main {
                     System.out.print("조회할 회원 ID를 입력하세요: ");
                     try {
                         Long id = Long.parseLong(scanner.nextLine());
-                        Optional<Member> foundMember = memberController.findMemberById(id);
-                        if (foundMember.isPresent()) {
-                            System.out.println("✅ 조회된 회원: ID=" + foundMember.get().getId() + ", 이름=" + foundMember.get().getName());
+                        Optional<Member> foundMemberOptional = memberController.findMemberById(id);
+                        if (foundMemberOptional.isPresent()) {
+                            Member foundMember = foundMemberOptional.get();
+                            System.out.println("--- ✅ 조회된 회원 정보 ---");
+                            System.out.println("ID: " + foundMember.getId());
+                            System.out.println("이름: " + foundMember.getName());
+                            System.out.println("이메일: " + foundMember.getEmail());
+                            System.out.println("생년월일: " + foundMember.getBirthdate());
+                            System.out.println("성별: " + foundMember.getGender());
+                            System.out.println("--------------------------");
                         } else {
                             System.out.println("⚠️ 해당 ID의 회원을 찾을 수 없습니다.");
                         }
@@ -67,7 +86,7 @@ public class Main {
                     else {
                         System.out.println("--- 📋 전체 회원 목록 📋 ---");
                         for (Member member : allMembers) {
-                            System.out.println("👤 ID=" + member.getId() + ", 이름=" + member.getName());
+                            System.out.println("👤 ID=" + member.getId() + ", 이름=" + member.getName() + ", 이메일=" + member.getEmail() + ", 생년월일=" + member.getBirthdate() + ", 성별=" + member.getGender());
                         }
                         System.out.println("--------------------------");
                     }

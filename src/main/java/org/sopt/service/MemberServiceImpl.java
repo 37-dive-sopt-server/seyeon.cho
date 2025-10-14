@@ -12,7 +12,7 @@ public class MemberServiceImpl implements MemberService  {
     private final MemoryMemberRepository memberRepository = new MemoryMemberRepository();
     private static long sequence = 1L;
 
-    public Long join(String name, String email, String birthDate, Gender gender) { {
+    public Long join(String name, String email, String birthDate, Gender gender) {
 
         Member member = new Member(sequence++, name, email, birthDate, gender);
         memberRepository.save(member);
