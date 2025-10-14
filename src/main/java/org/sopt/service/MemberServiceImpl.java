@@ -14,9 +14,18 @@ public class MemberServiceImpl implements MemberService  {
 
     public Long join(String name, String email, String birthDate, Gender gender) {
 
+        validateDuplicateEmail(email);
+
         Member member = new Member(sequence++, name, email, birthDate, gender);
         memberRepository.save(member);
         return member.getId();
+    }
+
+    private void validateDuplicateEmail(String email) {
+        memberRepository.findByEmail(email)
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 이메일입니다.");
+                });
     }
 
     public Optional<Member> findOne(Long memberId) {

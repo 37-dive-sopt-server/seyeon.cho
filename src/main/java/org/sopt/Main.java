@@ -33,28 +33,34 @@ public class Main {
 
             switch (choice) {
                 case "1":
-                    System.out.print("등록할 회원 이름을 입력하세요: ");
-                    String name = scanner.nextLine();
+                    try {
+                        System.out.print("등록할 회원 이름을 입력하세요: ");
+                        String name = scanner.nextLine();
 
-                    System.out.print("등록할 회원 이메일을 입력하세요: ");
-                    String email = scanner.nextLine();
+                        System.out.print("등록할 회원 이메일을 입력하세요: ");
+                        String email = scanner.nextLine();
 
-                    System.out.print("등록할 회원의 생년월일(YYYY-MM-DD)을 입력하세요: ");
-                    String birthdate = scanner.nextLine();
+                        System.out.print("등록할 회원의 생년월일(YYYY-MM-DD)을 입력하세요: ");
+                        String birthdate = scanner.nextLine();
 
-                    System.out.print("등록할 회원의 성별(MALE / FEMALE)을 입력하세요: ");
-                    Gender gender = Gender.valueOf(scanner.nextLine().toUpperCase());
+                        System.out.print("등록할 회원의 성별(MALE / FEMALE)을 입력하세요: ");
+                        Gender gender = Gender.valueOf(scanner.nextLine().toUpperCase());
 
-                    if (name.trim().isEmpty() || email.trim().isEmpty() || birthdate.trim().isEmpty()) {
-                        System.out.println("⚠️ 모든 정보를 입력해주세요.");
-                        continue;
-                    }
+                        if (name.trim().isEmpty() || email.trim().isEmpty() || birthdate.trim().isEmpty()) {
+                            System.out.println("⚠️ 모든 정보를 입력해주세요.");
+                            continue;
+                        }
 
-                    Long createdId = memberController.createMember(name, email, birthdate, gender);
-                    if (createdId != null) {
-                        System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
-                    } else {
-                        System.out.println("❌ 회원 등록 실패");
+                        Long createdId = memberController.createMember(name, email, birthdate, gender);
+                        if (createdId != null) {
+                            System.out.println("✅ 회원 등록 완료 (ID: " + createdId + ")");
+                        } else {
+                            System.out.println("❌ 회원 등록 실패");
+                        }
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("❌ 성별을 MALE 또는 FEMALE로 입력해주세요.");
+                    } catch (IllegalStateException e) {
+                        System.out.println("❌ " + e.getMessage());
                     }
                     break;
                 case "2":
@@ -82,8 +88,7 @@ public class Main {
                     List<Member> allMembers = memberController.getAllMembers();
                     if (allMembers.isEmpty()) {
                         System.out.println("ℹ️ 등록된 회원이 없습니다.");
-                    }
-                    else {
+                    } else {
                         System.out.println("--- 📋 전체 회원 목록 📋 ---");
                         for (Member member : allMembers) {
                             System.out.println("👤 ID=" + member.getId() + ", 이름=" + member.getName() + ", 이메일=" + member.getEmail() + ", 생년월일=" + member.getBirthdate() + ", 성별=" + member.getGender());
