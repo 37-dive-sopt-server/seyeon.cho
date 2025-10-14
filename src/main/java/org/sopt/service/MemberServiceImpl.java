@@ -7,7 +7,7 @@ import org.sopt.repository.MemoryMemberRepository;
 import java.util.List;
 import java.util.Optional;
 
-public class MemberServiceImpl implements MemberService  {
+public class MemberServiceImpl implements MemberService {
 
     private final MemoryMemberRepository memberRepository = new MemoryMemberRepository();
     private static long sequence = 1L;
@@ -30,6 +30,10 @@ public class MemberServiceImpl implements MemberService  {
 
     public Optional<Member> findOne(Long memberId) {
         return memberRepository.findById(memberId);
+    }
+
+    public void deleteMember(Long memberId) {
+        memberRepository.deleteById(memberId);
     }
 
     public List<Member> findAllMembers() {

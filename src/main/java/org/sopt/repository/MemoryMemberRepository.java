@@ -17,7 +17,6 @@ public class MemoryMemberRepository {
 
     }
 
-
     public Optional<Member> findById(Long id) {
         return Optional.ofNullable(store.get(id));
     }
@@ -28,6 +27,9 @@ public class MemoryMemberRepository {
                 .findFirst();
     }
 
+    public void deleteById(Long id) {
+        store.remove(id);
+    }
 
     public List<Member> findAll() {
         return new ArrayList<>(store.values());

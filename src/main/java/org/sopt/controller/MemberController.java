@@ -20,6 +20,10 @@ public class MemberController {
         return memberServiceImpl.findOne(id);
     }
 
+    public void deleteMemberById(Long id) {
+        memberServiceImpl.deleteMember(id);
+    }
+
     public List<Member> getAllMembers() {
         return memberServiceImpl.findAllMembers();
     }
