@@ -22,6 +22,7 @@ public class MemberController {
     /*
      * 회원 등록 API
      */
+    @PostMapping
     public Long createMember(
             @RequestBody MemberCreateRequest request
     ) {
@@ -39,7 +40,7 @@ public class MemberController {
 
 
     /*
-     * 회원 단건 조회 API
+     * 회원 단건 조회 API -> 옵셔널 제외하고 dto로 보내기
      */
     @GetMapping("/{id}")
     public Optional<Member> findMemberById(

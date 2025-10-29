@@ -5,11 +5,10 @@ import org.sopt.domain.Member;
 import org.sopt.dto.MemberCreateRequest;
 import org.sopt.repository.MemberRepository;
 import org.sopt.util.IdGenerator;
+import org.sopt.validator.MemberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,32 +24,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public Long join(MemberCreateRequest request) {
-        validateDuplicateEmail(request.email());
-        validateAge(request.birthDate());
 
-        Member member = new Member( IdGenerator.nextId(), request.name(), request.email(), request.birthDate(), Gender.fromString(request.gender()));
+        if (memberRepository.findByEmail(request.email()).isPresent()) {
+            throw new IllegalStateException("이미 존재하는 이메일입니다.");
+        }
+
+        MemberValidator.validateAge(request.birthDate());
+        Gender gender = Gender.fromString(request.gender());
+
+        Member member = new Member( IdGenerator.nextId(), request.name(), request.email(), request.birthDate(), gender);
+
         memberRepository.save(member);
         return member.getId();
-    }
-
-    private void validateDuplicateEmail(String email) {
-        memberRepository.findByEmail(email)
-                .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 이메일입니다.");
-                });
-    }
-
-    private void validateAge(LocalDate birthDate) {
-        if (birthDate == null) {
-            throw new IllegalArgumentException("생년월일은 필수입니다.");
-        }
-
-        LocalDate today = LocalDate.now();
-        int age = Period.between(birthDate, today).getYears();
-
-        if (age < 20) {
-            throw new IllegalStateException("만 20세 미만은 가입할 수 없습니다.");
-        }
     }
 
     @Override

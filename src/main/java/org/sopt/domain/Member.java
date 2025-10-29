@@ -11,6 +11,17 @@ public class Member {
     private Gender gender;
 
     public Member(Long id, String name, String email, LocalDate birthdate, Gender gender) {
+
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("이름은 필수입니다.");
+        }
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("올바른 이메일이 아닙니다.");
+        }
+        if (birthdate == null) {
+            throw new IllegalArgumentException("생년월일은 필수입니다.");
+        }
+
         this.id = id;
         this.name = name;
         this.email = email;
