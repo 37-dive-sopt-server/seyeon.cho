@@ -1,19 +1,16 @@
 package org.sopt.controller;
 
-import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
 import org.sopt.dto.MemberCreateRequest;
 import org.sopt.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/v1/members")
 public class MemberController {
     private final MemberService memberService;
 
@@ -25,7 +22,6 @@ public class MemberController {
     /*
      * 회원 등록 API
      */
-    @PostMapping("/users")
     public Long createMember(
             @RequestBody MemberCreateRequest request
     ) {
@@ -33,11 +29,10 @@ public class MemberController {
     }
 
 
-
     /*
      * 회원 삭제 API
      */
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public void deleteMemberById(@PathVariable Long id) {
         memberService.deleteMember(id);
     }
@@ -46,7 +41,7 @@ public class MemberController {
     /*
      * 회원 단건 조회 API
      */
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     public Optional<Member> findMemberById(
             @PathVariable Long id
     ) {

@@ -1,22 +1,22 @@
 package org.sopt.service;
 
+import org.sopt.domain.Gender;
+import org.sopt.domain.Member;
+import org.sopt.dto.MemberCreateRequest;
+import org.sopt.repository.MemberRepository;
+import org.sopt.util.IdGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
-import org.sopt.domain.Gender;
-import org.sopt.domain.Member;
-import org.sopt.dto.MemberCreateRequest;
-import org.sopt.repository.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
-    private static long sequence = 1L;
 
     @Autowired
     public MemberServiceImpl(MemberRepository memberRepository) {
@@ -28,8 +28,7 @@ public class MemberServiceImpl implements MemberService {
         validateDuplicateEmail(request.email());
         validateAge(request.birthDate());
 
-        Member member = new Member(sequence++, request.name(), request.email(), request.birthDate(), Gender.valueOf(request.gender().toUpperCase())
-        );
+        Member member = new Member( IdGenerator.nextId(), request.name(), request.email(), request.birthDate(), Gender.fromString(request.gender()));
         memberRepository.save(member);
         return member.getId();
     }
@@ -61,8 +60,12 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(Long memberId) {
+        if (memberRepository.findById(memberId).isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 회원 ID입니다: " + memberId);
+        }
         memberRepository.deleteById(memberId);
     }
+
 
     @Override
     public List<Member> findAllMembers() {

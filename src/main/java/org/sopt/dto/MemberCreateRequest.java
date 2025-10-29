@@ -7,4 +7,5 @@ public record MemberCreateRequest(
         LocalDate birthDate,
         String email,
         String gender
-) {}
+) {
+}

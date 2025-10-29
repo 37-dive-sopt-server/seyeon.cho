@@ -37,4 +37,8 @@ public class Member {
     public Gender getGender() {
         return gender;
     }
+
+    public boolean hasEmail(String email) {
+        return this.email.equals(email);
+    }
 }
