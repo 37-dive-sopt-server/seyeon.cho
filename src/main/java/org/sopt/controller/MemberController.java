@@ -2,6 +2,7 @@ package org.sopt.controller;
 
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
+import org.sopt.dto.MemberCreateRequest;
 import org.sopt.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,13 +25,11 @@ public class MemberController {
     /*
      * 회원 등록 API
      */
-    @PostMapping
+    @PostMapping("/users")
     public Long createMember(
-            @RequestParam String name,
-            @RequestParam String email,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthdate,
-            @RequestParam Gender gender) {
-        return memberService.join(name, email, birthdate, gender);
+            @RequestBody MemberCreateRequest request
+    ) {
+        return memberService.join(request);
     }
 
 
@@ -38,8 +37,8 @@ public class MemberController {
     /*
      * 회원 삭제 API
      */
-    @DeleteMapping("/{id}")
-    public void deleteMemberById(Long id) {
+    @DeleteMapping("/users/{id}")
+    public void deleteMemberById(@PathVariable Long id) {
         memberService.deleteMember(id);
     }
 
@@ -47,8 +46,10 @@ public class MemberController {
     /*
      * 회원 단건 조회 API
      */
-    @GetMapping("/{id}")
-    public Optional<Member> findMemberById(Long id) {
+    @GetMapping("/users/{id}")
+    public Optional<Member> findMemberById(
+            @PathVariable Long id
+    ) {
         return memberService.findOne(id);
     }
 

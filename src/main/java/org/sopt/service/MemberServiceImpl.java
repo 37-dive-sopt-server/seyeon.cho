@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
+import org.sopt.dto.MemberCreateRequest;
 import org.sopt.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,12 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Long join(String name, String email, LocalDate birthDate, Gender gender) {
-        validateDuplicateEmail(email);
-        validateAge(birthDate);
+    public Long join(MemberCreateRequest request) {
+        validateDuplicateEmail(request.email());
+        validateAge(request.birthDate());
 
-        Member member = new Member(sequence++, name, email, birthDate, gender);
+        Member member = new Member(sequence++, request.name(), request.email(), request.birthDate(), Gender.valueOf(request.gender().toUpperCase())
+        );
         memberRepository.save(member);
         return member.getId();
     }
