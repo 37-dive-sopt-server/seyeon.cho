@@ -1,17 +1,20 @@
 package org.sopt.controller;
 
-import org.sopt.domain.Member;
+import org.sopt.common.SuccessResponse;
 import org.sopt.dto.request.MemberCreateRequest;
+import org.sopt.dto.response.ApiCode;
+import org.sopt.dto.response.MemberCreateResponse;
+import org.sopt.dto.response.MemberListResponse;
+import org.sopt.dto.response.MemberResponse;
 import org.sopt.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/members")
 public class MemberController {
+
     private final MemberService memberService;
 
     @Autowired
@@ -19,41 +22,42 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    /*
-     * 회원 등록 API
-     */
+
     @PostMapping
-    public Long createMember(
+    public ResponseEntity<SuccessResponse<MemberCreateResponse>> createMember(
             @RequestBody MemberCreateRequest request
     ) {
-        return memberService.join(request);
+        MemberCreateResponse response = memberService.join(request);
+        return ResponseEntity
+                .status(ApiCode.SUCCESS_CREATE_MEMBER.status())
+                .body(SuccessResponse.of(ApiCode.SUCCESS_CREATE_MEMBER, response));
     }
 
 
-    /*
-     * 회원 삭제 API
-     */
     @DeleteMapping("/{id}")
-    public void deleteMemberById(@PathVariable Long id) {
-        memberService.deleteMember(id);
-    }
-
-
-    /*
-     * 회원 단건 조회 API -> 옵셔널 제외하고 dto로 보내기
-     */
-    @GetMapping("/{id}")
-    public Optional<Member> findMemberById(
+    public ResponseEntity<SuccessResponse<Void>> deleteMember(
             @PathVariable Long id
     ) {
-        return memberService.findOne(id);
+        memberService.deleteMember(id);
+        return ResponseEntity
+                .ok(SuccessResponse.of(ApiCode.SUCCESS_DELETE_MEMBER, null));
     }
 
-    /*
-     * 회원 전체 조회 API
-     */
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessResponse<MemberResponse>> getMember(
+            @PathVariable Long id
+    ) {
+        MemberResponse response = memberService.findOne(id);
+        return ResponseEntity
+                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_MEMBER, response));
+    }
+
+
     @GetMapping
-    public List<Member> getAllMembers() {
-        return memberService.findAllMembers();
+    public ResponseEntity<SuccessResponse<MemberListResponse>> getAllMembers() {
+        MemberListResponse response = memberService.findAllMembers();
+        return ResponseEntity
+                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_MEMBER, response));
     }
 }

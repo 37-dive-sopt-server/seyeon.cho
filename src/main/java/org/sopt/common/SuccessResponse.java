@@ -1,6 +1,6 @@
 package org.sopt.common;
 
-import org.springframework.http.HttpStatus;
+import org.sopt.dto.response.ApiCode;
 
 public record SuccessResponse<T>(
         int status,
@@ -8,11 +8,12 @@ public record SuccessResponse<T>(
         String message,
         T data
 ) {
-    public static <T> SuccessResponse<T> of(HttpStatus status, String code, String message, T data) {
-        return new SuccessResponse<>(status.value(), code, message, data);
-    }
-
-    public static <T> SuccessResponse<T> of(HttpStatus status, String code, String message) {
-        return new SuccessResponse<>(status.value(), code, message, null);
+    public static <T> SuccessResponse<T> of(ApiCode apiCode, T data) {
+        return new SuccessResponse<>(
+                apiCode.status(),
+                apiCode.code(),
+                apiCode.message(),
+                data
+        );
     }
 }

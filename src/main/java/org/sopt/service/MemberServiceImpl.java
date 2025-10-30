@@ -7,8 +7,8 @@ import org.sopt.dto.response.MemberCreateResponse;
 import org.sopt.dto.response.MemberListResponse;
 import org.sopt.dto.response.MemberResponse;
 import org.sopt.repository.MemberRepository;
-import org.sopt.util.IdGenerator;
-import org.sopt.validator.MemberValidator;
+import org.sopt.common.IdGenerator;
+import org.sopt.common.MemberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
