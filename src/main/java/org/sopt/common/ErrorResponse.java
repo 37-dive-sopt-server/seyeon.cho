@@ -1,11 +1,11 @@
 package org.sopt.common;
 
 public record ErrorResponse(
-        int status,
+        String status,
         String code,
         String message
 ) {
-    public static ErrorResponse of(int status, String code, String message) {
-        return new ErrorResponse(status, code, message);
+    public static ErrorResponse of(String code, String message) {
+        return new ErrorResponse("FAILURE", code, message);
     }
 }
