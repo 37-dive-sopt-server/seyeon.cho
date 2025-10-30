@@ -1,17 +1,16 @@
 package org.sopt.service;
 
-import org.sopt.domain.Member;
 import org.sopt.dto.request.MemberCreateRequest;
-
-import java.util.List;
-import java.util.Optional;
+import org.sopt.dto.response.MemberCreateResponse;
+import org.sopt.dto.response.MemberResponse;
+import org.sopt.dto.response.MemberListResponse;
 
 public interface MemberService {
-    Long join(MemberCreateRequest request);
+    MemberCreateResponse join(MemberCreateRequest request);
 
-    Optional<Member> findOne(Long memberId);
+    MemberResponse findOne(Long memberId);
 
     void deleteMember(Long memberId);
 
-    List<Member> findAllMembers();
+    MemberListResponse findAllMembers();
 }
