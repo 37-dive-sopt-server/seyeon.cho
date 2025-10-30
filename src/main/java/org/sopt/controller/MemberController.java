@@ -1,7 +1,7 @@
 package org.sopt.controller;
 
 import org.sopt.domain.Member;
-import org.sopt.dto.MemberCreateRequest;
+import org.sopt.dto.request.MemberCreateRequest;
 import org.sopt.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

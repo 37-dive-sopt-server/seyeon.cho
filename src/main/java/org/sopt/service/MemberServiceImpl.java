@@ -2,7 +2,7 @@ package org.sopt.service;
 
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
-import org.sopt.dto.MemberCreateRequest;
+import org.sopt.dto.request.MemberCreateRequest;
 import org.sopt.repository.MemberRepository;
 import org.sopt.util.IdGenerator;
 import org.sopt.validator.MemberValidator;
