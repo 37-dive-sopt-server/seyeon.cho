@@ -1,30 +1,63 @@
 package org.sopt.controller;
 
-import org.sopt.domain.Gender;
-import org.sopt.domain.Member;
-import org.sopt.service.MemberServiceImpl;
+import org.sopt.common.SuccessResponse;
+import org.sopt.dto.request.MemberCreateRequest;
+import org.sopt.dto.response.ApiCode;
+import org.sopt.dto.response.MemberCreateResponse;
+import org.sopt.dto.response.MemberListResponse;
+import org.sopt.dto.response.MemberResponse;
+import org.sopt.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
+@RestController
+@RequestMapping("/api/v1/members")
 public class MemberController {
 
-    private final MemberServiceImpl memberServiceImpl = new MemberServiceImpl();
+    private final MemberService memberService;
 
-    public Long createMember(String name, String email, String birthdate, Gender gender) {
-
-        return memberServiceImpl.join(name, email, birthdate, gender);
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
     }
 
-    public Optional<Member> findMemberById(Long id) {
-        return memberServiceImpl.findOne(id);
+
+    @PostMapping
+    public ResponseEntity<SuccessResponse<MemberCreateResponse>> createMember(
+            @RequestBody MemberCreateRequest request
+    ) {
+        MemberCreateResponse response = memberService.join(request);
+        return ResponseEntity
+                .status(ApiCode.SUCCESS_CREATE_MEMBER.status())
+                .body(SuccessResponse.of(ApiCode.SUCCESS_CREATE_MEMBER, response));
     }
 
-    public void deleteMemberById(Long id) {
-        memberServiceImpl.deleteMember(id);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<SuccessResponse<Void>> deleteMember(
+            @PathVariable Long id
+    ) {
+        memberService.deleteMember(id);
+        return ResponseEntity
+                .ok(SuccessResponse.of(ApiCode.SUCCESS_DELETE_MEMBER, null));
     }
 
-    public List<Member> getAllMembers() {
-        return memberServiceImpl.findAllMembers();
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessResponse<MemberResponse>> getMember(
+            @PathVariable Long id
+    ) {
+        MemberResponse response = memberService.findOne(id);
+        return ResponseEntity
+                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_MEMBER, response));
+    }
+
+
+    @GetMapping
+    public ResponseEntity<SuccessResponse<MemberListResponse>> getAllMembers() {
+        MemberListResponse response = memberService.findAllMembers();
+        return ResponseEntity
+                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_MEMBER, response));
     }
 }

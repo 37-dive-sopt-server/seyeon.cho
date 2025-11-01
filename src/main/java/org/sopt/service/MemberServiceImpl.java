@@ -2,57 +2,69 @@ package org.sopt.service;
 
 import org.sopt.domain.Gender;
 import org.sopt.domain.Member;
-import org.sopt.repository.MemoryMemberRepository;
+import org.sopt.dto.request.MemberCreateRequest;
+import org.sopt.dto.response.MemberCreateResponse;
+import org.sopt.dto.response.MemberListResponse;
+import org.sopt.dto.response.MemberResponse;
+import org.sopt.repository.MemberRepository;
+import org.sopt.common.IdGenerator;
+import org.sopt.common.MemberValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Service
 public class MemberServiceImpl implements MemberService {
 
-    private final MemoryMemberRepository memberRepository = new MemoryMemberRepository();
-    private static long sequence = 1L;
+    private final MemberRepository memberRepository;
 
-    public Long join(String name, String email, String birthDate, Gender gender) {
-
-        validateDuplicateEmail(email);
-        validateAge(birthDate);
-
-        Member member = new Member(sequence++, name, email, birthDate, gender);
-        memberRepository.save(member);
-        return member.getId();
+    @Autowired
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
-    private void validateDuplicateEmail(String email) {
-        memberRepository.findByEmail(email)
-                .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 이메일입니다.");
-                });
-    }
+    @Override
+    public MemberCreateResponse join(MemberCreateRequest request) {
 
-    private void validateAge(String birthDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate birth = LocalDate.parse(birthDate, formatter);
-        LocalDate today = LocalDate.now();
-
-        int age = Period.between(birth, today).getYears();
-
-        if (age < 20) {
-            throw new IllegalStateException("만 20세 미만은 가입할 수 없습니다.");
+        if (memberRepository.findByEmail(request.email()).isPresent()) {
+            throw new IllegalStateException("이미 존재하는 이메일입니다.");
         }
+
+        MemberValidator.validateAge(request.birthDate());
+        Gender gender = Gender.fromString(request.gender());
+
+        Member member = new Member(IdGenerator.nextId(), request.name(), request.email(), request.birthDate(), gender);
+
+        memberRepository.save(member);
+        return MemberCreateResponse.from(member);
     }
 
-    public Optional<Member> findOne(Long memberId) {
-        return memberRepository.findById(memberId);
+    @Override
+    public MemberResponse findOne(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원 ID입니다: " + memberId));
+
+        return MemberResponse.from(member);
     }
 
+
+    @Override
     public void deleteMember(Long memberId) {
+        if (memberRepository.findById(memberId).isEmpty()) {
+            throw new IllegalArgumentException("존재하지 않는 회원 ID입니다: " + memberId);
+        }
         memberRepository.deleteById(memberId);
     }
 
-    public List<Member> findAllMembers() {
-        return memberRepository.findAll();
+
+    @Override
+    public MemberListResponse findAllMembers() {
+        List<MemberResponse> responses = memberRepository.findAll().stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
+
+        return MemberListResponse.from(responses);
     }
 }

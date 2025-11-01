@@ -1,14 +1,27 @@
 package org.sopt.domain;
 
+import java.time.LocalDate;
+
 public class Member {
 
     private Long id;
     private String name;
     private String email;
-    private String birthdate;
+    private LocalDate birthdate;
     private Gender gender;
 
-    public Member(Long id, String name, String email, String birthdate, Gender gender) {
+    public Member(Long id, String name, String email, LocalDate birthdate, Gender gender) {
+
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("이름은 필수입니다.");
+        }
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("올바른 이메일이 아닙니다.");
+        }
+        if (birthdate == null) {
+            throw new IllegalArgumentException("생년월일은 필수입니다.");
+        }
+
         this.id = id;
         this.name = name;
         this.email = email;
@@ -28,7 +41,7 @@ public class Member {
         return email;
     }
 
-    public String getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
@@ -36,4 +49,7 @@ public class Member {
         return gender;
     }
 
+    public boolean hasEmail(String email) {
+        return this.email.equals(email);
+    }
 }
