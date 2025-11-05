@@ -9,7 +9,6 @@ import org.sopt.dto.response.MemberResponse;
 import org.sopt.repository.MemberRepository;
 import org.sopt.common.IdGenerator;
 import org.sopt.common.MemberValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +19,6 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
-    @Autowired
     public MemberServiceImpl(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
