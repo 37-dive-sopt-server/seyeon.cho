@@ -32,6 +32,10 @@ public class ArticleServiceImpl implements ArticleService {
         Member member = memberRepository.findById(request.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
+        if (articleRepository.findByTitle(request.title()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 게시글 제목입니다.");
+        }
+
         ArticleTag tag = ArticleTag.fromString(request.tag());
 
         Article article = new Article(member, request.title(), request.content(), tag);
