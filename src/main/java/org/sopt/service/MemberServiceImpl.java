@@ -7,7 +7,6 @@ import org.sopt.dto.response.MemberCreateResponse;
 import org.sopt.dto.response.MemberListResponse;
 import org.sopt.dto.response.MemberResponse;
 import org.sopt.repository.MemberRepository;
-import org.sopt.common.IdGenerator;
 import org.sopt.common.MemberValidator;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +29,11 @@ public class MemberServiceImpl implements MemberService {
             throw new IllegalStateException("이미 존재하는 이메일입니다.");
         }
 
+        MemberValidator.validateInput(request.name(), request.email(), request.birthDate());
         MemberValidator.validateAge(request.birthDate());
         Gender gender = Gender.fromString(request.gender());
 
-        Member member = new Member(IdGenerator.nextId(), request.name(), request.email(), request.birthDate(), gender);
+        Member member = new Member(request.name(), request.email(), request.birthDate(), gender);
 
         memberRepository.save(member);
         return MemberCreateResponse.from(member);

@@ -1,5 +1,6 @@
 package org.sopt.service;
 
+import org.sopt.common.ArticleValidator;
 import org.sopt.domain.Article;
 import org.sopt.domain.ArticleTag;
 import org.sopt.domain.Member;
@@ -37,6 +38,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         ArticleTag tag = ArticleTag.fromString(request.tag());
+        ArticleValidator.validateInput(request.title(), request.content(), tag);
 
         Article article = new Article(member, request.title(), request.content(), tag);
         articleRepository.save(article);
