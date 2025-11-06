@@ -16,7 +16,7 @@ public record MemberCreateResponse(
                 member.getId(),
                 member.getName(),
                 member.getEmail(),
-                member.getBirthdate(),
+                member.getBirthDate(),
                 member.getGender().name()
         );
     }
