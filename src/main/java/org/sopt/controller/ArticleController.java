@@ -1,11 +1,11 @@
 package org.sopt.controller;
 
 import org.sopt.common.SuccessResponse;
+import org.sopt.controller.common.SuccessStatus;
 import org.sopt.dto.request.ArticleCreateRequest;
 import org.sopt.dto.response.ArticleCreateResponse;
 import org.sopt.dto.response.ArticleListResponse;
 import org.sopt.dto.response.ArticleResponse;
-import org.sopt.dto.response.ApiCode;
 import org.sopt.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,8 +28,8 @@ public class ArticleController {
     ) {
         ArticleCreateResponse response = articleService.createArticle(request);
         return ResponseEntity
-                .status(ApiCode.SUCCESS_CREATE_ARTICLE.status())
-                .body(SuccessResponse.of(ApiCode.SUCCESS_CREATE_ARTICLE, response));
+                .status(SuccessStatus.SUCCESS_CREATE_ARTICLE.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_CREATE_ARTICLE, response));
     }
 
     @GetMapping("/{id}")
@@ -38,13 +38,15 @@ public class ArticleController {
     ) {
         ArticleResponse response = articleService.getArticle(id);
         return ResponseEntity
-                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_ARTICLE, response));
+                .status(SuccessStatus.SUCCESS_FIND_ARTICLE.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_FIND_ARTICLE, response));
     }
 
     @GetMapping
     public ResponseEntity<SuccessResponse<ArticleListResponse>> getAllArticles() {
         ArticleListResponse response = articleService.getAllArticles();
         return ResponseEntity
-                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_ARTICLE, response));
+                .status(SuccessStatus.SUCCESS_FIND_ALL_ARTICLES.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_FIND_ALL_ARTICLES, response));
     }
 }

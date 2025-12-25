@@ -1,8 +1,8 @@
 package org.sopt.controller;
 
 import org.sopt.common.SuccessResponse;
+import org.sopt.controller.common.SuccessStatus;
 import org.sopt.dto.request.MemberCreateRequest;
-import org.sopt.dto.response.ApiCode;
 import org.sopt.dto.response.MemberCreateResponse;
 import org.sopt.dto.response.MemberListResponse;
 import org.sopt.dto.response.MemberResponse;
@@ -22,17 +22,15 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-
     @PostMapping
     public ResponseEntity<SuccessResponse<MemberCreateResponse>> createMember(
             @RequestBody MemberCreateRequest request
     ) {
         MemberCreateResponse response = memberService.join(request);
         return ResponseEntity
-                .status(ApiCode.SUCCESS_CREATE_MEMBER.status())
-                .body(SuccessResponse.of(ApiCode.SUCCESS_CREATE_MEMBER, response));
+                .status(SuccessStatus.SUCCESS_CREATE_MEMBER.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_CREATE_MEMBER, response));
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse<Void>> deleteMember(
@@ -40,9 +38,9 @@ public class MemberController {
     ) {
         memberService.deleteMember(id);
         return ResponseEntity
-                .ok(SuccessResponse.of(ApiCode.SUCCESS_DELETE_MEMBER, null));
+                .status(SuccessStatus.SUCCESS_DELETE_MEMBER.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_DELETE_MEMBER, null));
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponse<MemberResponse>> getMember(
@@ -50,14 +48,15 @@ public class MemberController {
     ) {
         MemberResponse response = memberService.findOne(id);
         return ResponseEntity
-                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_MEMBER, response));
+                .status(SuccessStatus.SUCCESS_FIND_MEMBER.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_FIND_MEMBER, response));
     }
-
 
     @GetMapping
     public ResponseEntity<SuccessResponse<MemberListResponse>> getAllMembers() {
         MemberListResponse response = memberService.findAllMembers();
         return ResponseEntity
-                .ok(SuccessResponse.of(ApiCode.SUCCESS_FIND_MEMBER, response));
+                .status(SuccessStatus.SUCCESS_FIND_MEMBER.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_FIND_MEMBER, response));
     }
 }

@@ -1,6 +1,6 @@
 package org.sopt.common;
 
-import org.sopt.dto.response.ApiCode;
+import org.sopt.exception.ErrorStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,22 +10,28 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException e) {
+        ErrorStatus errorStatus = ErrorStatus.NOT_FOUND_MEMBER_EXCEPTION;
+
         return ResponseEntity
-                .status(ApiCode.FAILURE_MEMBER_NOT_FOUND.status())
-                .body(ErrorResponse.of(ApiCode.FAILURE_MEMBER_NOT_FOUND.code(), e.getMessage()));
+                .status(errorStatus.getHttpStatus())
+                .body(ErrorResponse.of(errorStatus, e.getMessage()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErrorResponse> handleIllegalState(IllegalStateException e) {
+        ErrorStatus errorStatus = ErrorStatus.VALIDATION_REQUEST_MISSING_EXCEPTION;
+
         return ResponseEntity
-                .badRequest()
-                .body(ErrorResponse.of(ApiCode.FAILURE_INVALID_REQUEST.code(), e.getMessage()));
+                .status(errorStatus.getHttpStatus())
+                .body(ErrorResponse.of(errorStatus, e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception e) {
+        ErrorStatus errorStatus = ErrorStatus.INTERNAL_SERVER_ERROR;
+
         return ResponseEntity
-                .internalServerError()
-                .body(ErrorResponse.of("f5000", e.getMessage()));
+                .status(errorStatus.getHttpStatus())
+                .body(ErrorResponse.of(errorStatus, e.getMessage()));
     }
 }

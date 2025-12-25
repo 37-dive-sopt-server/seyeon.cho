@@ -1,4 +1,4 @@
-package org.sopt.common;
+package org.sopt.common.validator;
 
 import org.sopt.domain.ArticleTag;
 
