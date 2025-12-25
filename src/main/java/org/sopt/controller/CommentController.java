@@ -1,8 +1,8 @@
 package org.sopt.controller;
 
 import org.sopt.common.SuccessResponse;
+import org.sopt.controller.common.SuccessStatus;
 import org.sopt.dto.request.CommentRequest;
-import org.sopt.dto.response.ApiCode;
 import org.sopt.dto.response.CommentResponse;
 import org.sopt.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,8 @@ public class CommentController {
     ) {
         Long commentId = commentService.createComment(articleId, request);
         return ResponseEntity
-                .status(ApiCode.SUCCESS_CREATE_COMMENT.status())
-                .body(SuccessResponse.of(ApiCode.SUCCESS_CREATE_COMMENT, commentId));
+                .status(SuccessStatus.SUCCESS_CREATE_COMMENT.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_CREATE_COMMENT, commentId));
     }
 
     @PatchMapping("/comments/{commentId}")
@@ -40,10 +40,9 @@ public class CommentController {
     ) {
         commentService.updateComment(commentId, request);
         return ResponseEntity
-                .status(ApiCode.SUCCESS_UPDATE_COMMENT.status())
-                .body(SuccessResponse.of(ApiCode.SUCCESS_UPDATE_COMMENT, commentId));
+                .status(SuccessStatus.SUCCESS_UPDATE_COMMENT.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_UPDATE_COMMENT, commentId));
     }
-
 
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<SuccessResponse<Long>> deleteComment(
@@ -51,10 +50,9 @@ public class CommentController {
     ) {
         commentService.deleteComment(commentId);
         return ResponseEntity
-                .status(ApiCode.SUCCESS_DELETE_COMMENT.status())
-                .body(SuccessResponse.of(ApiCode.SUCCESS_DELETE_COMMENT, commentId));
+                .status(SuccessStatus.SUCCESS_DELETE_COMMENT.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_DELETE_COMMENT, commentId));
     }
-
 
     @GetMapping("/articles/{articleId}/comments")
     public ResponseEntity<SuccessResponse<List<CommentResponse>>> getComments(
@@ -62,7 +60,7 @@ public class CommentController {
     ) {
         List<CommentResponse> response = commentService.getComments(articleId);
         return ResponseEntity
-                .status(ApiCode.SUCCESS_FIND_COMMENT.status())
-                .body(SuccessResponse.of(ApiCode.SUCCESS_FIND_COMMENT, response));
+                .status(SuccessStatus.SUCCESS_FIND_COMMENT.getHttpStatus())
+                .body(SuccessResponse.of(SuccessStatus.SUCCESS_FIND_COMMENT, response));
     }
 }
