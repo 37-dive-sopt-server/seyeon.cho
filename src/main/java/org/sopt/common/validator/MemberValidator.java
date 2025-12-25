@@ -1,4 +1,4 @@
-package org.sopt.common;
+package org.sopt.common.validator;
 
 import java.time.LocalDate;
 import java.time.Period;

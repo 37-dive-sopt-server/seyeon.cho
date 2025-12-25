@@ -1,6 +1,6 @@
 package org.sopt.service;
 
-import org.sopt.common.ArticleValidator;
+import org.sopt.common.validator.ArticleValidator;
 import org.sopt.domain.Article;
 import org.sopt.domain.ArticleTag;
 import org.sopt.domain.Member;

@@ -7,7 +7,7 @@ import org.sopt.dto.response.MemberCreateResponse;
 import org.sopt.dto.response.MemberListResponse;
 import org.sopt.dto.response.MemberResponse;
 import org.sopt.repository.MemberRepository;
-import org.sopt.common.MemberValidator;
+import org.sopt.common.validator.MemberValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

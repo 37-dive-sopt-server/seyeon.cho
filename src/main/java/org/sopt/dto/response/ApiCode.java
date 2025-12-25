@@ -13,7 +13,12 @@ public enum ApiCode {
     SUCCESS_FIND_ARTICLE(200, "s3002", "게시글 조회를 성공하였습니다."),
     SUCCESS_FIND_ALL_ARTICLES(200, "s3003", "전체 게시글 조회를 성공하였습니다."),
     FAILURE_ARTICLE_NOT_FOUND(404, "f4042", "존재하지 않는 게시글입니다."),
-    FAILURE_INVALID_ARTICLE_REQUEST(400, "f4002", "잘못된 게시글 요청입니다.");
+    FAILURE_INVALID_ARTICLE_REQUEST(400, "f4002", "잘못된 게시글 요청입니다."),
+
+    SUCCESS_CREATE_COMMENT(200, "s2010", "댓글 생성 성공"),
+    SUCCESS_UPDATE_COMMENT(200, "s2000", "댓글 수정 성공"),
+    SUCCESS_DELETE_COMMENT(200, "s2000", "댓글 삭제 성공"),
+    SUCCESS_FIND_COMMENT(200, "s2000", "댓글 조회 성공");
 
     private final int status;
     private final String code;
